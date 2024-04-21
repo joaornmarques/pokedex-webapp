@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import localforage from 'localforage';
-import './App.css';
-import AllPokemonTable from './components/AllPokemonTable';
+import './assets/styles/main.css';
+import PokemonTable from './components/PokemonTable';
+import PokedexStats from './components/PokedexStats';
 import fetchPokemonSpecies from './utils/fetchPokemonSpecies';
 import fetchPokemonData from './utils/fetchPokemonData';
+import pokeballBg from './assets/images/pokeball-bg.svg';
 
 function App() {
   const [pokemonSpecies, setPokemonSpecies] = useState<{ name: string, url: string }[]>([]);
@@ -83,16 +85,16 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <AllPokemonTable
-          species={pokemonSpecies}
-          savedPokemons={savedPokemons}
-          openPokemon={openPokemon}
-          catchPokemon={catchPokemon}
-          uncatchPokemon={uncatchPokemon}
-        />
-      </header>
+    <div className='main-container'>
+      <img className='pokeball-bg' src={pokeballBg} alt="Pokédex"/>
+      <PokedexStats />
+      <PokemonTable
+        species={pokemonSpecies}
+        savedPokemons={savedPokemons}
+        openPokemon={openPokemon}
+        catchPokemon={catchPokemon}
+        uncatchPokemon={uncatchPokemon}
+      />
     </div>
   );
 }

@@ -1,0 +1,22 @@
+.stats-panel {
+  width: 280px;
+  min-width: 280px;
+  margin-right: 24px;
+  z-index: 2;
+}
+
+.pokedex-title {
+  font-family: "Rubik Mono One", monospace;
+  font-weight: 800;
+  background-color: var(--color-light);
+  color: var(--color-dark);
+  font-size: var(--ts-1);
+  line-height: 1;
+  margin: 0;
+  padding: 0 24px;
+  text-transform: uppercase;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  border-radius: 12px;
+}

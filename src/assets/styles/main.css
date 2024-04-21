@@ -1,0 +1,84 @@
+:root {
+  /* Color scheme */
+  --color-bg-light: #243787;
+  --color-bg-dark: #0B1D74;
+  --color-action: #FF1C1C;
+  --color-action-dark: #DF1818;
+  --color-table: #FBC75E;
+  --color-table-dark: #C9A245;
+  --color-dark: #000000;
+  --color-light: #F8F8F8;
+  /* Typescale */
+  --ts-1: 31px;
+  --ts-2: 25px;
+  --ts-3: 20px;
+  --ts-4: 16px;
+}
+
+html {
+  background-color: var(--color-bg-dark);
+}
+
+body {
+  margin: 0;
+  font-family: "Dosis", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(
+    to bottom,
+    var(--color-bg-dark),
+    var(--color-bg-dark) 50%,
+    var(--color-bg-light) 50%,
+    var(--color-bg-light)
+  );
+  background-size: 100% 16px;
+  font-size: var(--ts-3);
+}
+
+.ts-1 {
+  font-size: var(--ts-1);
+  line-height: 1.6;
+}
+
+.ts-2 {
+  font-size: var(--ts-2);
+  line-height: 1.6;
+}
+
+.ts-3 {
+  font-size: var(--ts-3);
+  line-height: 1.6;
+}
+
+.main-container {
+  width: 100vw;
+  height: 100vh;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 24px;
+  position: relative;
+  display: flex;
+}
+
+.pokeball-bg {
+  position: absolute;
+  z-index: 1;
+  left: -304px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 608px;
+  width: 608px;
+  opacity: 0.8;
+  animation: pokeball-spin infinite 20s linear;
+}
+
+@keyframes pokeball-spin {
+  from {
+    transform: translateY(-50%) rotate(0deg);
+  }
+  to {
+    transform: translateY(-50%) rotate(360deg);
+  }
+}
