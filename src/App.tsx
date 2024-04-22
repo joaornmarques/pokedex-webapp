@@ -109,10 +109,22 @@ function App() {
     updatePokemonData(savedPokemonIndex(id), timestamp, notes);
   }
 
+  const resetPokedex = () => {
+    if (window.confirm('Do you want to reset your Pokedex? This action is nor reversible.') === true) {
+      setSavedPokemons([]);
+      setActivePokemon(undefined);
+      localforage.setItem('savedPokemons', []);
+    }
+  }
+
   return (
     <div className='main-container'>
       <img className='pokeball-bg' src={pokeballBg} alt="Pokédex"/>
-      <PokedexStats />
+      <PokedexStats
+        totalPokemons={pokemonSpecies.length}
+        savedPokemons={savedPokemons}
+        resetPokedex={resetPokedex}
+      />
       <PokemonTable
         species={pokemonSpecies}
         savedPokemons={savedPokemons}

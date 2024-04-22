@@ -1,9 +1,35 @@
 import './../assets/styles/pokedex-stats.css';
+import Button from './../components/Button';
 
-function PokedexStats() {
+interface PokedexStatsProps {
+  totalPokemons: number;
+  savedPokemons: any[];
+  resetPokedex: () => void;
+}
+
+function PokedexStats({totalPokemons, savedPokemons, resetPokedex}: PokedexStatsProps) {
+
+  const catchedPokemons = savedPokemons.filter(pokemon => pokemon.added_at !== null).length;
+
   return (
     <section className='stats-panel'>
-      <h1 className='pokedex-title'>Pokedex</h1>
+      <div>
+        <h1 className='pokedex-title'>Pokedex</h1>
+        <div className='stats-entry'>
+          <p className='stats-entry__title'>Catched pokemons</p>
+          <p className='stats-entry__value'>{catchedPokemons}/{totalPokemons}</p>
+        </div>
+        <div className='stats-entry'>
+          <p className='stats-entry__title'>Pokedex completion</p>
+          <p className='stats-entry__value'>{Math.round((catchedPokemons / totalPokemons) * 100)}%</p>
+        </div>
+      </div>
+      <div>
+        <Button onClick={() => resetPokedex()} customClasses='mb-8'>Reset pokedex</Button>
+        <p className='m-0 ts-4 fw-700 color-light'>
+          created by: <a className='color-light' href='https://joaomarques.website/'>joaomarques.website</a>
+        </p>
+      </div>
     </section>
   );
 }

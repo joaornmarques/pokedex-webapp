@@ -99,6 +99,10 @@ body {
   align-items: center;
 }
 
+.color-light {
+  color: var(--color-light);
+}
+
 .tag {
   font-size: var(--ts-4);
   text-transform: uppercase;

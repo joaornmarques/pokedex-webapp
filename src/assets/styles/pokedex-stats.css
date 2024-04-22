@@ -1,4 +1,7 @@
 .stats-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   width: 256px;
   min-width: 256px;
   margin-right: 24px;
@@ -19,4 +22,28 @@
   box-sizing: border-box;
   text-align: center;
   border-radius: 12px;
+}
+
+.stats-entry {
+  color: var(--color-light);
+  display: flex;
+  flex-direction: column;
+  margin-top: 24px;
+}
+
+.stats-entry__title {
+  font-size: var(--ts-4);
+  text-transform: uppercase;
+  font-weight: 700;
+  border-bottom: solid 2px var(--color-light);
+  margin: 0;
+  padding-bottom: 8px;
+}
+
+.stats-entry__value {
+  font-size: var(--ts-2);
+  font-weight: 800;
+  margin: 0;
+  padding-top: 8px;
+  text-align: right;
 }
