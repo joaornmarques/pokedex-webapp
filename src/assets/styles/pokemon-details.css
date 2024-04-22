@@ -1,0 +1,30 @@
+.details-panel {
+  position: relative;
+  width: 400px;
+  min-width: 400px;
+  z-index: 2;
+  background-color: var(--color-action);
+  border-radius: 8px 48px 8px 8px;
+  margin-top: 42px;
+  padding: 16px;
+}
+
+.details-header {
+  background-color: var(--color-light);
+  border: solid 2px var(--color-gray);
+  border-radius: 8px 40px 8px 8px;
+  display: flex;
+  align-items: center;
+}
+
+.details-header__img {
+  width: 96px;
+  height: 96px;
+  margin: 8px;
+}
+
+.details-header__info {
+  margin: 8px 8px 8px 0;
+  padding-left: 16px;
+  border-left: solid 1px var(--color-gray);
+}

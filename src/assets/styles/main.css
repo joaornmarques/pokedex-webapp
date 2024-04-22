@@ -3,11 +3,14 @@
   --color-bg-light: #243787;
   --color-bg-dark: #0B1D74;
   --color-action: #FF1C1C;
-  --color-action-dark: #DF1818;
+  --color-action-dark: #cb1717;
+  --color-active: #8bb250;
+  --color-active-dark: #63754d;
   --color-table: #FBC75E;
   --color-table-dark: #C9A245;
   --color-dark: #000000;
   --color-light: #F8F8F8;
+  --color-gray: #DCDCDC;
   /* Typescale */
   --ts-1: 31px;
   --ts-2: 25px;
@@ -21,7 +24,7 @@ html {
 
 body {
   margin: 0;
-  font-family: "Dosis", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'Dosis', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -37,20 +40,76 @@ body {
   font-size: var(--ts-3);
 }
 
+/* Utils */
+
 .ts-1 {
   font-size: var(--ts-1);
-  line-height: 1.6;
 }
 
 .ts-2 {
   font-size: var(--ts-2);
-  line-height: 1.6;
 }
 
 .ts-3 {
   font-size: var(--ts-3);
-  line-height: 1.6;
 }
+
+.ts-4 {
+  font-size: var(--ts-4);
+}
+
+.fw-500 {
+  font-weight: 500;
+}
+
+.fw-700 {
+  font-weight: 700;
+}
+
+.fw-800 {
+  font-weight: 800;
+}
+
+.text-uppercase {
+  text-transform: uppercase;
+}
+
+.text-capitalize {
+  text-transform: capitalize;
+}
+
+.m-0 {
+  margin: 0;
+}
+
+.mb-8 {
+  margin-bottom: 8px;
+}
+
+.mr-8 {
+  margin-right: 8px;
+}
+
+.flex {
+  display: flex;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.tag {
+  font-size: var(--ts-4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background-color: var(--color-gray);
+  border-radius: 8px;
+  padding: 0 4px;
+  margin-right: 4px;
+  font-weight: 600;
+}
+
+/* Main classes */
 
 .main-container {
   width: 100vw;
@@ -65,11 +124,11 @@ body {
 .pokeball-bg {
   position: absolute;
   z-index: 1;
-  left: -304px;
+  left: -256px;
   top: 50%;
   transform: translateY(-50%);
-  height: 608px;
-  width: 608px;
+  height: 536px;
+  width: 536px;
   opacity: 0.8;
   animation: pokeball-spin infinite 20s linear;
 }

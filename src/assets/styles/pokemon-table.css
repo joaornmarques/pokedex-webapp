@@ -2,19 +2,49 @@
   position: relative;
   flex: 1;
   z-index: 2;
-  background-color: var(--color-table);
-  border-radius: 8px;
-  border: solid 2px var(--color-table-dark);
+  margin-right: 24px;
+}
+
+.table-toggler {
+  padding: 4px;
+  background-color: var(--color-table-dark);
+  display: inline-flex;
+  align-items: center;
+  border-radius: 18px 18px 0 0;
 }
 
 .table {
   width: 100%;
-  height: 100%;
+  height: calc(100% - 42px);
   display: flex;
   flex-direction: column;
+  background-color: var(--color-table);
+  border-radius: 0 8px 8px 8px;
+  border: solid 2px var(--color-table-dark);
+}
+
+.table__head {
+  display: flex;
+  width: 100%;
 }
 
 .table__body {
   flex: 1;
   overflow: auto;
+}
+
+.table__row {
+  display: flex;
+  width: 100%;
+}
+
+.pokeball-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 4px;
+}
+
+.pokeball-icon--sm {
+  width: 16px;
+  height: 16px;
 }

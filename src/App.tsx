@@ -2,14 +2,28 @@ import { useState, useEffect } from 'react';
 import localforage from 'localforage';
 import './assets/styles/main.css';
 import PokemonTable from './components/PokemonTable';
+import PokemonDetails from './components/PokemonDetails';
 import PokedexStats from './components/PokedexStats';
 import fetchPokemonSpecies from './utils/fetchPokemonSpecies';
 import fetchPokemonData from './utils/fetchPokemonData';
 import pokeballBg from './assets/images/pokeball-bg.svg';
 
+interface Pokemon {
+  name: string;
+  id: number;
+  height: number;
+  weight: number;
+  stats: any[]; // Define the type for stats
+  types: any[]; // Define the type for types
+  image: string;
+  added_at: number | null;
+  notes: string | null;
+}
+
 function App() {
   const [pokemonSpecies, setPokemonSpecies] = useState<{ name: string, url: string }[]>([]);
   const [savedPokemons, setSavedPokemons] = useState<any[]>([]);
+  const [activePokemon, setActivePokemon] = useState<Pokemon | undefined>(undefined);
 
   useEffect(() => {
     const loadLocalData = async () => {
@@ -30,36 +44,41 @@ function App() {
 
   const savePokemonData = (id: number, timestamp: null | number, notes: null | string) => {
     fetchPokemonData(id).then(data => {
-      const updatedPokemons = [
-        ...savedPokemons,
-        {
-          name: data.name,
-          id: data.id,
-          height: data.height,
-          weight: data.weight,
-          stats: data.stats,
-          types: data.types,
-          image: data.sprites.front_default,
-          added_at: timestamp,
-          notes: notes,
-        }
-      ];
-
+      const pokemonData = {
+        name: data.name,
+        id: data.id,
+        height: data.height,
+        weight: data.weight,
+        stats: data.stats,
+        types: data.types,
+        image: data.sprites.front_default,
+        added_at: timestamp,
+        notes: notes,
+      }
+      const updatedPokemons = [...savedPokemons, pokemonData];
       setSavedPokemons(updatedPokemons);
+      setActivePokemon(pokemonData);
       localforage.setItem('savedPokemons', updatedPokemons);
     });
   }
 
-  const updatePokemonData = (id: number, timestamp: null | number, notes: null | string) => {
+  const setActivePokemonById = (id: number) => {
+    setActivePokemon(savedPokemons.find(pokemon => parseInt(pokemon.id) === id));
+  }
+
+  const openPokemon = (id: number) => {
+    if(savedPokemons.find(pokemon => parseInt(pokemon.id) === id)) {
+      setActivePokemonById(id);
+    } else {
+      savePokemonData(id, null, null);
+    }
+  }
+
+  const updatePokemonData = (id: number, timestamp: number | null, notes: string | null) => {
     const updatedPokemons = [...savedPokemons];
     updatedPokemons[id] = { ...savedPokemons[id], added_at: timestamp, notes: notes};
     setSavedPokemons(updatedPokemons);
     localforage.setItem('savedPokemons', updatedPokemons);
-  }
-
-  const openPokemon = (id: number) => {
-    savePokemonData(id, null, null);
-    // open pokemon panel
   }
 
   const savedPokemonIndex = (id: number) => {
@@ -69,19 +88,25 @@ function App() {
   const catchPokemon = (id: number) => {
     const localIndex = savedPokemonIndex(id);
     if(localIndex !== -1) {
-      updatePokemonData(localIndex, Date.now(), null);
+      const pokemonData = savedPokemons.find(pokemon => parseInt(pokemon.id) === id);
+      updatePokemonData(localIndex, Date.now(), pokemonData.notes);
     } else {
       savePokemonData(id, Date.now(), null);
     }
-    console.log(savedPokemons)
+    setActivePokemonById(id);
   }
 
   const uncatchPokemon = (id: number) => {
     const localIndex = savedPokemonIndex(id);
     if(localIndex !== -1) {
-      updatePokemonData(localIndex, null, null);
+      const pokemonData = savedPokemons.find(pokemon => parseInt(pokemon.id) === id);
+      updatePokemonData(localIndex, null, pokemonData.notes);
     }
-    console.log(savedPokemons)
+    setActivePokemon(undefined);
+  }
+
+  const updatePokemonNotes = (id: number, timestamp: number | null, notes: string | null) => {
+    updatePokemonData(savedPokemonIndex(id), timestamp, notes);
   }
 
   return (
@@ -95,6 +120,7 @@ function App() {
         catchPokemon={catchPokemon}
         uncatchPokemon={uncatchPokemon}
       />
+      <PokemonDetails pokemon={activePokemon} updatePokemonNotes={updatePokemonNotes}/>
     </div>
   );
 }

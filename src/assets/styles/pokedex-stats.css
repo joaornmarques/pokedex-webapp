@@ -1,6 +1,6 @@
 .stats-panel {
-  width: 280px;
-  min-width: 280px;
+  width: 256px;
+  min-width: 256px;
   margin-right: 24px;
   z-index: 2;
 }

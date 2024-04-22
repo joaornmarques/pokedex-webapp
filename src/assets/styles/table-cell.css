@@ -1,0 +1,47 @@
+.table-cell {
+  width: 200px;
+  min-width: 200px;
+  max-width: 200px;
+  height: 32px;
+  font-weight: 500;
+  border-bottom: solid 1px var(--color-table-dark);
+  padding: 4px 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/* Sizes */
+
+.table-cell--xs {
+  width: 40px;
+  min-width: 40px;
+  max-width: 40px;
+  align-items: center;
+  justify-content: center;
+}
+
+.table-cell--sm {
+  width: 48px;
+  min-width: 48px;
+  max-width: 48px;
+  font-size: var(--ts-4);
+}
+
+.table-cell--expand {
+  width: auto;
+  min-width: none;
+  max-width: none;
+  flex: 1;
+}
+
+/* Variants */
+
+.table-cell--head {
+  background-color: var(--color-table-dark);
+  font-weight: 700;
+  font-size: var(--ts-4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  align-items: center;
+}
