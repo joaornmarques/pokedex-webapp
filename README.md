@@ -1,6 +1,11 @@
-# Getting Started with Create React App
+# Pokedex Webapp
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a Pokédex webapp, where you can register the Pokémons you caught and check their stats.
+
+A few key features:
+- **See *every* Pokémon:** Thanks to [PokéAPI](https://pokeapi.co/), every single Pokémon is listed here in detail.
+- **Save your progess locally:** No need for accounts. Start registring your catchings and the data will be automatically saved in your device's local storage.
+- **Catch on desktop, tablet or mobile:** This Pokédex responsive interface ensure that your experience will be the best regardless of the device you use.
 
 ## Available Scripts
 
@@ -38,9 +43,3 @@ If you aren’t satisfied with the build tool and configuration choices, you can
 Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
