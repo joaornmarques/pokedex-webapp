@@ -4,6 +4,16 @@
   z-index: 2;
   margin-right: 24px;
 }
+@media only screen and (max-width: 1188px) {
+  .table-wrapper {
+    display: none;
+    margin-right: 0;
+  }
+  .table-wrapper--active {
+    display: block;
+    margin-right: 0;
+  }
+}
 
 .table-toggler {
   padding: 4px;
@@ -27,10 +37,21 @@
   display: flex;
   width: 100%;
 }
+@media only screen and (max-width: 1560px) {
+  .table__head {
+    display: none;
+  }
+}
 
 .table__body {
   flex: 1;
   overflow: auto;
+}
+@media only screen and (max-width: 1560px) {
+  .table__body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .table__row {
@@ -44,6 +65,20 @@
 .table__row--active {
   background-color: var(--color-light);
 }
+@media only screen and (max-width: 1560px) {
+  .table__row {
+    flex-wrap: wrap;
+    padding: 8px;
+    box-sizing: border-box;
+  }
+
+  .table__row:not(.table__row--active):not(:hover):nth-child(4n+2),
+  .table__row:not(.table__row--active):not(:hover):nth-child(4n+3) {
+    background-color: var(--color-table-dark);
+  }
+}
+
+
 
 .pokeball-icon {
   width: 24px;

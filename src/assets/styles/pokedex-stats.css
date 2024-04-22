@@ -7,6 +7,17 @@
   margin-right: 24px;
   z-index: 2;
 }
+@media only screen and (max-width: 1188px) {
+  .stats-panel {
+    display: none;
+    margin-right: 0;
+  }
+  .stats-panel--active {
+    display: flex;
+    margin-top: 48px;
+    width: 100%;
+  }
+}
 
 .pokedex-title {
   font-family: "Rubik Mono One", monospace;

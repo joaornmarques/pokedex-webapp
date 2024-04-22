@@ -18,6 +18,11 @@
   align-items: center;
 }
 
+.button--sm {
+  font-size: var(--ts-4);
+  padding: 0 8px;
+}
+
 .button:hover,
 .button:focus {
   background-color: var(--color-action-dark);

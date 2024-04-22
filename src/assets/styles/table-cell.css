@@ -1,7 +1,7 @@
 .table-cell {
-  width: 200px;
-  min-width: 200px;
-  max-width: 200px;
+  width: 176px;
+  min-width: 176px;
+  max-width: 176px;
   height: 32px;
   font-weight: 500;
   border-bottom: solid 1px var(--color-table-dark);
@@ -38,6 +38,27 @@
   padding-right: 8px;
 }
 
+@media only screen and (max-width: 1560px) {
+  .table-cell {
+    width: auto;
+    max-width: none;
+    min-width: auto;
+    height: auto;
+    border-bottom: none;
+    padding: 0 0 4px 0;
+  }
+  .table-cell--xs .pokeball-icon {
+    width: 16px;
+    height: 16px;
+  }
+  .table-cell--expand {
+    width: 100%;
+    min-width: 100%;
+    padding-right: 0;
+    padding-bottom: 0;
+  }
+}
+
 /* Variants */
 
 .table-cell--head,
@@ -57,4 +78,23 @@
 
 .table-cell--head-selectable:hover {
   color: var(--color-light);
+}
+
+.table-cell--name {
+  font-size: var(--ts-3);
+}
+
+@media only screen and (max-width: 1560px) {
+  .table-cell--show-xl {
+    display: none;
+  }
+  .table-cell--timespan {
+    width: 100%;
+    min-width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .table-cell--name {
+    font-size: var(--ts-4);
+  }
 }

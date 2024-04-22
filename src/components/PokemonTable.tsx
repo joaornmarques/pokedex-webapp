@@ -10,12 +10,13 @@ interface PokemonTableProps {
   species: { name: string, url: string }[];
   savedPokemons: any[];
   activePokemonId: number | null;
+  showTableMobile: boolean;
   catchPokemon: (id: number) => void;
   uncatchPokemon: (id: number) => void;
   openPokemon: (id: number) => void;
 }
 
-function PokemonTable({ species, savedPokemons, activePokemonId, catchPokemon, uncatchPokemon, openPokemon }: PokemonTableProps) {
+function PokemonTable({ species, savedPokemons, activePokemonId, showTableMobile, catchPokemon, uncatchPokemon, openPokemon }: PokemonTableProps) {
   const [showCatched, setShowCatched] = useState<boolean>(false);
   const [activeSort, setActiveSort] = useState<string>('');
   const [listedPokemons, setListedPokemons] = useState<any[]>([]);
@@ -58,7 +59,7 @@ function PokemonTable({ species, savedPokemons, activePokemonId, catchPokemon, u
   }, [species]);
 
   return (
-    <section className='table-wrapper'>
+    <section className={`table-wrapper ${showTableMobile ? 'table-wrapper--active' : ''}`}>
       <div className='table-toggler'>
         <img src={pokeballBg} alt='Show Pokémon' className='pokeball-icon'></img>
         <Button
@@ -120,20 +121,20 @@ function PokemonTable({ species, savedPokemons, activePokemonId, catchPokemon, u
                 <img src={pokeballIcon} alt='Pokémon catched' className='pokeball-icon'></img>
               )}</TableCell>
               <TableCell size='sm'>
-                {showCatched ? pokemon.id : index + 1}
+                {showCatched ? pokemon.id : index + 1}&nbsp;
               </TableCell>
-              <TableCell>
+              <TableCell variant='name'>
                 <span className='text-uppercase fw-700'>{pokemon.name}</span>
               </TableCell>
               {showCatched && (
                 <>
-                  <TableCell size='sm'>{pokemon.height}</TableCell>
-                  <TableCell>
+                  <TableCell size='sm' variant='show-xl'>{pokemon.height}</TableCell>
+                  <TableCell variant='show-xl'>
                     {pokemon.types.map((type: any, index: any) => (
                       <span key={index} className='tag tag--table'>{type.type.name}</span>
                     ))}
                   </TableCell>
-                  <TableCell><span className='ts-4'>{getDate(pokemon.added_at)}</span></TableCell>
+                  <TableCell variant='timespan'><span className='ts-4'>{getDate(pokemon.added_at)}</span></TableCell>
                 </>
               )}
               <TableCell size='expand'>

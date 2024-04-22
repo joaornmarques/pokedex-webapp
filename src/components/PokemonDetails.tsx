@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import './../assets/styles/pokemon-details.css';
 import debounce from './../utils/debounce';
 import pokeballBg from './../assets/images/pokeball-bg.svg';
+import Button from './../components/Button';
 
 interface PokemonDetailsProps {
   pokemon: {
@@ -14,11 +15,13 @@ interface PokemonDetailsProps {
     image: string;
     added_at: number | null;
     notes: string | null;
-  } | undefined,
+  } | undefined;
+  showDetailsMobile: boolean;
   updatePokemonNotes: (id: number, timestamp: number | null, notes: string) => void;
+  closeDetailsMobile: () => void;
 }
 
-function PokemonDetails({pokemon, updatePokemonNotes}: PokemonDetailsProps) {
+function PokemonDetails({pokemon, showDetailsMobile, updatePokemonNotes, closeDetailsMobile}: PokemonDetailsProps) {
   const [curPokemon, setCurPokemon] = useState(pokemon);
 
   useEffect(() => {
@@ -38,9 +41,12 @@ function PokemonDetails({pokemon, updatePokemonNotes}: PokemonDetailsProps) {
   }
 
   return (
-    <section className={`details-panel ${curPokemon ? 'details-panel--active' : ''}`}>
+    <section className={`details-panel ${curPokemon ? 'details-panel--active' : ''} ${showDetailsMobile ? 'details-panel--active-mobile' : ''}`}>
       {curPokemon ? (
         <>
+          <div className='mb-16'>
+            <Button size='sm' onClick={() => closeDetailsMobile()}>X Close</Button>
+          </div>
           <div className='details-header'>
             <img src={curPokemon.image} alt={curPokemon.name} className='details-header__img' />
             <div className='details-header__info'>

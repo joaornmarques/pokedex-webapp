@@ -7,6 +7,7 @@ import PokedexStats from './components/PokedexStats';
 import fetchPokemonSpecies from './utils/fetchPokemonSpecies';
 import fetchPokemonData from './utils/fetchPokemonData';
 import pokeballBg from './assets/images/pokeball-bg.svg';
+import Button from './components/Button';
 
 interface Pokemon {
   name: string;
@@ -24,6 +25,8 @@ function App() {
   const [pokemonSpecies, setPokemonSpecies] = useState<{ name: string, url: string }[]>([]);
   const [savedPokemons, setSavedPokemons] = useState<any[]>([]);
   const [activePokemon, setActivePokemon] = useState<Pokemon | undefined>(undefined);
+  const [statusPanel, setStatusPanel] = useState<boolean>(false);
+  const [detailsPanel, setDetailsPanel] = useState<boolean>(false);
 
   useEffect(() => {
     const loadLocalData = async () => {
@@ -72,6 +75,7 @@ function App() {
     } else {
       savePokemonData(id, null, null);
     }
+    setDetailsPanel(true);
   }
 
   const updatePokemonData = (id: number, timestamp: number | null, notes: string | null) => {
@@ -117,13 +121,28 @@ function App() {
     }
   }
 
+  const toggleStatusPanel = () => {
+    setStatusPanel(!statusPanel)
+  }
+
+  const closeDetailsPanel = () => {
+    setDetailsPanel(false);
+    setActivePokemon(undefined);
+  }
+
   return (
     <div className='main-container'>
       <img className='pokeball-bg' src={pokeballBg} alt="Pokédex"/>
+      <div className='status-toggler-container'>
+        <Button size='sm' onClick={() => toggleStatusPanel()}>
+          {statusPanel ? '❮ Pokemons' : 'Progress ❯'}
+        </Button>
+      </div>
       <PokedexStats
         totalPokemons={pokemonSpecies.length}
         savedPokemons={savedPokemons}
         resetPokedex={resetPokedex}
+        showStatsMobile={statusPanel}
       />
       <PokemonTable
         species={pokemonSpecies}
@@ -132,8 +151,14 @@ function App() {
         openPokemon={openPokemon}
         catchPokemon={catchPokemon}
         uncatchPokemon={uncatchPokemon}
+        showTableMobile={!statusPanel}
       />
-      <PokemonDetails pokemon={activePokemon} updatePokemonNotes={updatePokemonNotes}/>
+      <PokemonDetails
+        pokemon={activePokemon}
+        updatePokemonNotes={updatePokemonNotes}
+        showDetailsMobile={detailsPanel}
+        closeDetailsMobile={() => closeDetailsPanel()}
+      />
     </div>
   );
 }

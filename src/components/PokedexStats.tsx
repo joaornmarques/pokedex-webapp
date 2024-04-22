@@ -4,15 +4,16 @@ import Button from './../components/Button';
 interface PokedexStatsProps {
   totalPokemons: number;
   savedPokemons: any[];
+  showStatsMobile: boolean;
   resetPokedex: () => void;
 }
 
-function PokedexStats({totalPokemons, savedPokemons, resetPokedex}: PokedexStatsProps) {
+function PokedexStats({totalPokemons, savedPokemons, showStatsMobile, resetPokedex}: PokedexStatsProps) {
 
   const catchedPokemons = savedPokemons.filter(pokemon => pokemon.added_at !== null).length;
 
   return (
-    <section className='stats-panel'>
+    <section className={`stats-panel ${showStatsMobile ? 'stats-panel--active' : ''}`}>
       <div>
         <h1 className='pokedex-title'>Pokedex</h1>
         <div className='stats-entry'>
