@@ -13,13 +13,16 @@
   padding: 0 12px;
   transition: background-color 0.2s ease;
   box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .button:hover,
 .button:focus {
   background-color: var(--color-action-dark);
-  border-top: solid 1px;
-  border-bottom: solid 3px;
+  border-top-width: 1px;
+  border-bottom-width: 3px;
 }
 
 .button--toggle {
@@ -46,4 +49,33 @@
   background-color: var(--color-active);
   border-top: solid 1px;
   border-bottom: solid 3px;
+}
+
+.button--catch,
+.button--uncatch {
+  width: 104px;
+  justify-content: space-between;
+  font-size: var(--ts-4);
+  padding: 0 8px;
+}
+
+.button--catch {
+  background-color: var(--color-bg-light);
+  color: var(--color-light);
+  border-color: var(--color-dark);
+}
+
+.button--catch .button__icon {
+  filter: invert(1);
+}
+
+.button--catch:hover,
+.button--catch:focus {
+  background-color: var(--color-bg-dark);
+}
+
+.button__icon {
+  width: 12px;
+  height: 12px;
+  margin-right: 4px;
 }

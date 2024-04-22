@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import './../assets/styles/pokemon-details.css';
-import pokeballIcon from './../assets/images/pokeball.png';
-import getDate from './../utils/getDate';
 import debounce from './../utils/debounce';
+import pokeballBg from './../assets/images/pokeball-bg.svg';
 
 interface PokemonDetailsProps {
   pokemon: {
@@ -39,8 +38,8 @@ function PokemonDetails({pokemon, updatePokemonNotes}: PokemonDetailsProps) {
   }
 
   return (
-    <section className='details-panel'>
-      {curPokemon && (
+    <section className={`details-panel ${curPokemon ? 'details-panel--active' : ''}`}>
+      {curPokemon ? (
         <>
           <div className='details-header'>
             <img src={curPokemon.image} alt={curPokemon.name} className='details-header__img' />
@@ -51,38 +50,48 @@ function PokemonDetails({pokemon, updatePokemonNotes}: PokemonDetailsProps) {
               </p>
               <div className='flex mb-8'>
                 <p className='m-0 ts-4 mr-8'>
-                  <span>Height:</span>&nbsp;
-                  <span className='fw-700'>{curPokemon.height}</span>
+                  <span className='fw-700'>{curPokemon.height}</span>&nbsp;
+                  <span>Height</span>
                 </p>
                 <p className='m-0 ts-4'>
-                  <span>Weight:</span>&nbsp;
-                  <span className='fw-700'>{curPokemon.weight}</span>
+                  <span className='fw-700'>{curPokemon.weight}</span>&nbsp;
+                  <span>Weight</span>
                 </p>
               </div>
-              <div className='flex align-center mb-8'>
+              <div className='flex align-center'>
                 <span className='m-0 ts-4'>Types:</span>&nbsp;
                 {curPokemon.types.map((type, index) => (
                   <span key={index} className='tag'>{type.type.name}</span>
                 ))}
               </div>
-              <p key={curPokemon ? curPokemon.added_at : 'default'} className='flex align-center m-0 ts-4'>
-                {curPokemon.added_at ? (
-                  <>
-                    <img src={pokeballIcon} alt='Pokémon catched' className='pokeball-icon pokeball-icon--sm'></img>
-                    Catched at: {getDate(curPokemon.added_at)}
-                  </>
-                ) : 'Not catched yet'}</p>
             </div>
           </div>
-          {curPokemon.stats.map((stat, index) => (
-            <p key={index}>{stat.stat.name}: {stat.base_stat}</p>
-          ))}
-          <textarea
-            key={curPokemon ? curPokemon.id : 'default'}
-            defaultValue={curPokemon.notes || ''}
-            onChange={(e) => updateNotes(e)}
-          ></textarea>
+          <div className='details-stats'>
+            <p className='m-0 mb-8 text-uppercase ts-4 fw-700'>Pokémon Stats</p>
+            <div className='details-stats__grid'>
+              {curPokemon.stats.map((stat, index) => (
+                <p className='m-0 mb-8 ts-4' key={index}>
+                  <span className='ts-3 fw-800'>{stat.base_stat}</span>&nbsp;&nbsp;{stat.stat.name}
+                </p>
+              ))}
+            </div>
+          </div>
+          <div className='details-notes'>
+            <p className='m-0 mb-8 text-uppercase ts-4 fw-700'>Notes</p>
+            <textarea
+              className='details-notes__textarea'
+              placeholder='Type some notes about this Pokémon'
+              key={curPokemon ? curPokemon.id : 'default'}
+              defaultValue={curPokemon.notes || ''}
+              onChange={(e) => updateNotes(e)}
+            ></textarea>
+          </div>
         </>
+      ) : (
+        <div className='details-placeholder'>
+          <img className='details-placeholder__img' src={pokeballBg} alt="Pokédex"/>
+          <p className='ts-3 fw-700 text-uppercase'>Pokedex details panel</p>
+        </div>
       )}
     </section>
   );

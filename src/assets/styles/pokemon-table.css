@@ -36,6 +36,13 @@
 .table__row {
   display: flex;
   width: 100%;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.table__row:hover,
+.table__row--active {
+  background-color: var(--color-light);
 }
 
 .pokeball-icon {

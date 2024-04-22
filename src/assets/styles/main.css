@@ -11,6 +11,7 @@
   --color-dark: #000000;
   --color-light: #F8F8F8;
   --color-gray: #DCDCDC;
+  --color-gray-light: #EDEDED;
   /* Typescale */
   --ts-1: 31px;
   --ts-2: 25px;
@@ -102,9 +103,9 @@ body {
   font-size: var(--ts-4);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  background-color: var(--color-gray);
+  border: solid 1px;
   border-radius: 8px;
-  padding: 0 4px;
+  padding: 0 6px;
   margin-right: 4px;
   font-weight: 600;
 }

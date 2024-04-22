@@ -116,6 +116,7 @@ function App() {
       <PokemonTable
         species={pokemonSpecies}
         savedPokemons={savedPokemons}
+        activePokemonId={activePokemon?.id || null}
         openPokemon={openPokemon}
         catchPokemon={catchPokemon}
         uncatchPokemon={uncatchPokemon}

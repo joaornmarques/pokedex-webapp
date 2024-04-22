@@ -5,7 +5,7 @@ interface ButtonProps {
   size?: string | null;
   variant?: string | null;
   customClasses?: string | null;
-  onClick: () => void;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 function Button({ children, size, variant, customClasses, onClick }: ButtonProps) {

@@ -30,18 +30,31 @@
 
 .table-cell--expand {
   width: auto;
-  min-width: none;
   max-width: none;
+  min-width: auto;
   flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 8px;
 }
 
 /* Variants */
 
-.table-cell--head {
+.table-cell--head,
+.table-cell--head-selectable {
   background-color: var(--color-table-dark);
   font-weight: 700;
   font-size: var(--ts-4);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   align-items: center;
+}
+
+.table-cell--head-selectable {
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.table-cell--head-selectable:hover {
+  color: var(--color-light);
 }
