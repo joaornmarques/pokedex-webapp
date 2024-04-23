@@ -44,7 +44,6 @@
 }
 
 .table__body {
-  flex: 1;
   overflow: auto;
 }
 @media only screen and (max-width: 1560px) {
