@@ -114,7 +114,7 @@ function App() {
   }
 
   const resetPokedex = () => {
-    if (window.confirm('Do you want to reset your Pokedex? This action is nor reversible.') === true) {
+    if (window.confirm('Do you want to reset your Pokédex? This action is nor reversible.') === true) {
       setSavedPokemons([]);
       setActivePokemon(undefined);
       localforage.setItem('savedPokemons', []);

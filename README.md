@@ -1,4 +1,4 @@
-# Pokedex Webapp
+# Pokédex Webapp
 
 This is a Pokédex webapp, where you can register the Pokémons you caught and check their stats.
 
