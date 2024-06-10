@@ -32,7 +32,6 @@ function App() {
     const loadLocalData = async () => {
       const localSavedPokemons = await localforage.getItem('savedPokemons');
       const localPokemonSpecies = await localforage.getItem('pokemonSpecies');
-      if (localSavedPokemons) setSavedPokemons(localSavedPokemons as any[]);
       if (localPokemonSpecies) {
         setPokemonSpecies(localPokemonSpecies as any[]);
       } else {
@@ -41,6 +40,7 @@ function App() {
           localforage.setItem('pokemonSpecies', data);
         }) 
       }
+      if (localSavedPokemons) setSavedPokemons(localSavedPokemons as any[]);
     }
     loadLocalData()
   }, []);
@@ -145,6 +145,7 @@ function App() {
         showStatsMobile={statusPanel}
       />
       <PokemonTable
+        key={pokemonSpecies.length}
         species={pokemonSpecies}
         savedPokemons={savedPokemons}
         activePokemonId={activePokemon?.id || null}

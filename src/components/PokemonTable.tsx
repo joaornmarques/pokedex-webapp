@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import pokeballIcon from './../assets/images/pokeball.png';
 import pokeballBg from './../assets/images/pokeball-bg.svg';
 import './../assets/styles/pokemon-table.css';
@@ -19,7 +19,7 @@ interface PokemonTableProps {
 function PokemonTable({ species, savedPokemons, activePokemonId, showTableMobile, catchPokemon, uncatchPokemon, openPokemon }: PokemonTableProps) {
   const [showCatched, setShowCatched] = useState<boolean>(false);
   const [activeSort, setActiveSort] = useState<string>('');
-  const [listedPokemons, setListedPokemons] = useState<any[]>([]);
+  const [listedPokemons, setListedPokemons] = useState<any[]>(species);
 
   const isPokemonCatched = (id: number) => {
     const pokemon = savedPokemons.find(e => parseInt(e.id) === id)
@@ -53,10 +53,6 @@ function PokemonTable({ species, savedPokemons, activePokemonId, showTableMobile
     }
     setActiveSort(param);
   }
-
-  useEffect(() => {
-    setListedPokemons(species)
-  }, [species]);
 
   return (
     <section className={`table-wrapper ${showTableMobile ? 'table-wrapper--active' : ''}`}>
