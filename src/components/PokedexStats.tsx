@@ -1,19 +1,26 @@
 import './../assets/styles/pokedex-stats.css';
 import Button from './../components/Button';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState, AppDispatch } from '../redux/store';
+import { setSavedPokemons } from '../redux/savedPokemonsSlice';
 
-interface PokedexStatsProps {
-  totalPokemons: number;
-  savedPokemons: any[];
-  showStatsMobile: boolean;
-  resetPokedex: () => void;
-}
+function PokedexStats() {
+  const dispatch = useDispatch<AppDispatch>();
+  const pokemonSpecies = useSelector((state: RootState) => state.pokemonSpecies);
+  const savedPokemons = useSelector((state: RootState) => state.savedPokemons);
+  const { statusPanel } = useSelector((state: RootState) => state.ui);
 
-function PokedexStats({totalPokemons, savedPokemons, showStatsMobile, resetPokedex}: PokedexStatsProps) {
-
+  const totalPokemons = pokemonSpecies.length;
   const catchedPokemons = savedPokemons.filter(pokemon => pokemon.added_at !== null).length;
 
+  const resetPokedex = () => {
+    if (window.confirm('Do you want to reset your Pokédex? This action is not reversible.') === true) {
+      dispatch(setSavedPokemons([]));
+    }
+  };
+
   return (
-    <section className={`stats-panel ${showStatsMobile ? 'stats-panel--active' : ''}`}>
+    <section className={`stats-panel ${statusPanel ? 'stats-panel--active' : ''}`}>
       <div>
         <h1 className='pokedex-title'>Pokédex</h1>
         <div className='stats-entry'>

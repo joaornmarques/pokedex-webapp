@@ -1,61 +1,62 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import pokeballIcon from './../assets/images/pokeball.png';
 import pokeballBg from './../assets/images/pokeball-bg.svg';
 import './../assets/styles/pokemon-table.css';
 import TableCell from './../components/TableCell';
 import Button from './../components/Button';
 import getDate from './../utils/getDate';
+import { RootState } from '../redux/store';
 
 interface PokemonTableProps {
-  species: { name: string, url: string }[];
-  savedPokemons: any[];
-  activePokemonId: number | null;
-  showTableMobile: boolean;
+  openPokemon: (id: number) => void;
   catchPokemon: (id: number) => void;
   uncatchPokemon: (id: number) => void;
-  openPokemon: (id: number) => void;
 }
 
-function PokemonTable({ species, savedPokemons, activePokemonId, showTableMobile, catchPokemon, uncatchPokemon, openPokemon }: PokemonTableProps) {
+function PokemonTable({ openPokemon, catchPokemon, uncatchPokemon }: PokemonTableProps) {
+  const pokemonSpecies = useSelector((state: RootState) => state.pokemonSpecies);
+  const savedPokemons = useSelector((state: RootState) => state.savedPokemons);
+  const { activePokemon, statusPanel } = useSelector((state: RootState) => state.ui);
+
   const [showCatched, setShowCatched] = useState<boolean>(false);
   const [activeSort, setActiveSort] = useState<string>('');
-  const [listedPokemons, setListedPokemons] = useState<any[]>(species);
+  const [listedPokemons, setListedPokemons] = useState<any[]>(pokemonSpecies);
+
+  useEffect(() => {
+    setListedPokemons(pokemonSpecies);
+  }, [pokemonSpecies]);
 
   const isPokemonCatched = (id: number) => {
-    const pokemon = savedPokemons.find(e => parseInt(e.id) === id)
+    const pokemon = savedPokemons.find(e => e.id === id)
     return pokemon && pokemon.added_at !== null
   }
 
   const showAllPokemons = () => {
     setShowCatched(false)
-    setListedPokemons(species)
+    setListedPokemons(pokemonSpecies)
   }
 
   const showCatchedPokemons = () => {
     setShowCatched(true)
     const filteredPokemons = savedPokemons.filter(pokemon => pokemon.added_at !== null);
-    setListedPokemons(filteredPokemons.slice().sort((a, b) => parseInt(a.id) - parseInt(b.id)));
-  }
-
-  const uncatchAndUpdateList = (id: number) => {
-    uncatchPokemon(id)
-    setListedPokemons(listedPokemons.filter(pokemon => parseInt(pokemon.id) !== id));
+    setListedPokemons(filteredPokemons.slice().sort((a, b) => a.id - b.id));
   }
 
   const isPokemonActive = (id: number) => {
-    return id === activePokemonId
+    return id === activePokemon?.id
   }
 
   const reorderPokemon = (param: string) => {
     if (showCatched) {
-      const sortedPokemons = listedPokemons.slice().sort((a, b) => parseInt(a[param]) - parseInt(b[param]));
+      const sortedPokemons = [...listedPokemons].sort((a, b) => a[param] - b[param]);
       setListedPokemons(sortedPokemons)
     }
     setActiveSort(param);
   }
 
   return (
-    <section className={`table-wrapper ${showTableMobile ? 'table-wrapper--active' : ''}`}>
+    <section className={`table-wrapper ${!statusPanel ? 'table-wrapper--active' : ''}`}>
       <div className='table-toggler'>
         <img src={pokeballBg} alt='Show Pokémon' className='pokeball-icon'></img>
         <Button
@@ -107,9 +108,9 @@ function PokemonTable({ species, savedPokemons, activePokemonId, showTableMobile
           </tr>
         </thead>
         <tbody className='table__body'>
-          {listedPokemons && listedPokemons.map((pokemon, index) => (
+          {listedPokemons.map((pokemon, index) => (
             <tr
-              key={index}
+              key={showCatched ? pokemon.id : index}
               className={`table__row ${isPokemonActive(showCatched ? pokemon.id : index + 1) ? 'table__row--active' : ''}`}
               onClick={() => openPokemon(showCatched ? pokemon.id : index + 1)}
             >
@@ -126,7 +127,7 @@ function PokemonTable({ species, savedPokemons, activePokemonId, showTableMobile
                 <>
                   <TableCell size='sm' variant='show-xl'>{pokemon.height}</TableCell>
                   <TableCell variant='show-xl'>
-                    {pokemon.types.map((type: any, index: any) => (
+                    {pokemon.types.map((type: any, index: number) => (
                       <span key={index} className='tag tag--table'>{type.type.name}</span>
                     ))}
                   </TableCell>
@@ -136,13 +137,13 @@ function PokemonTable({ species, savedPokemons, activePokemonId, showTableMobile
               <TableCell size='expand'>
                 {isPokemonCatched(showCatched ? pokemon.id : index + 1) ? 
                 (
-                  <Button variant='uncatch' onClick={(event) => { event.stopPropagation(); uncatchAndUpdateList(showCatched ? pokemon.id : index + 1)}}>
+                  <Button variant='uncatch' onClick={(event) => { event.stopPropagation(); uncatchPokemon(showCatched ? pokemon.id : index + 1)}}>
                     <img src={pokeballBg} alt='uncatch pokemon' className='button__icon' />
                     Uncatch
                   </Button>
                 ) : (
                   <Button variant='catch' onClick={(event) => { event.stopPropagation(); catchPokemon(showCatched ? pokemon.id : index + 1)}}>
-                    <img src={pokeballBg} alt='uncatch pokemon' className='button__icon' />
+                    <img src={pokeballBg} alt='catch pokemon' className='button__icon' />
                     Catch
                   </Button>
                 )}

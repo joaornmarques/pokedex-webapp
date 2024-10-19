@@ -1,133 +1,77 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import localforage from 'localforage';
 import './assets/styles/main.css';
 import PokemonTable from './components/PokemonTable';
 import PokemonDetails from './components/PokemonDetails';
 import PokedexStats from './components/PokedexStats';
 import fetchPokemonSpecies from './utils/fetchPokemonSpecies';
-import fetchPokemonData from './utils/fetchPokemonData';
 import pokeballBg from './assets/images/pokeball-bg.svg';
 import Button from './components/Button';
-
-interface Pokemon {
-  name: string;
-  id: number;
-  height: number;
-  weight: number;
-  stats: any[]; // Define the type for stats
-  types: any[]; // Define the type for types
-  image: string;
-  added_at: number | null;
-  notes: string | null;
-}
+import { RootState, AppDispatch, store } from './redux/store';
+import { setPokemonSpecies } from './redux/pokemonSpeciesSlice';
+import { setSavedPokemons } from './redux/savedPokemonsSlice';
+import { setActivePokemon, setStatusPanel, setDetailsPanel } from './redux/uiSlice';
+import { fetchAndAddPokemon } from './redux/pokemonThunks';
 
 function App() {
-  const [pokemonSpecies, setPokemonSpecies] = useState<{ name: string, url: string }[]>([]);
-  const [savedPokemons, setSavedPokemons] = useState<any[]>([]);
-  const [activePokemon, setActivePokemon] = useState<Pokemon | undefined>(undefined);
-  const [statusPanel, setStatusPanel] = useState<boolean>(false);
-  const [detailsPanel, setDetailsPanel] = useState<boolean>(false);
+  const dispatch = useDispatch<AppDispatch>();
+  const pokemonSpecies = useSelector((state: RootState) => state.pokemonSpecies);
+  const savedPokemons = useSelector((state: RootState) => state.savedPokemons);
+  const { statusPanel } = useSelector((state: RootState) => state.ui);
 
   useEffect(() => {
     const loadLocalData = async () => {
       const localSavedPokemons = await localforage.getItem('savedPokemons');
       const localPokemonSpecies = await localforage.getItem('pokemonSpecies');
       if (localPokemonSpecies) {
-        setPokemonSpecies(localPokemonSpecies as any[]);
+        dispatch(setPokemonSpecies(localPokemonSpecies as any[]));
       } else {
         fetchPokemonSpecies().then(data => {
-          setPokemonSpecies(data);
+          dispatch(setPokemonSpecies(data));
           localforage.setItem('pokemonSpecies', data);
         }) 
       }
-      if (localSavedPokemons) setSavedPokemons(localSavedPokemons as any[]);
+      if (localSavedPokemons) dispatch(setSavedPokemons(localSavedPokemons as any[]));
     }
     loadLocalData()
-  }, []);
-
-  const savePokemonData = (id: number, timestamp: null | number, notes: null | string) => {
-    fetchPokemonData(id).then(data => {
-      const pokemonData = {
-        name: data.name,
-        id: data.id,
-        height: data.height,
-        weight: data.weight,
-        stats: data.stats,
-        types: data.types,
-        image: data.sprites.front_default,
-        added_at: timestamp,
-        notes: notes,
-      }
-      const updatedPokemons = [...savedPokemons, pokemonData];
-      setSavedPokemons(updatedPokemons);
-      setActivePokemon(pokemonData);
-      localforage.setItem('savedPokemons', updatedPokemons);
-    });
-  }
-
-  const setActivePokemonById = (id: number) => {
-    setActivePokemon(savedPokemons.find(pokemon => parseInt(pokemon.id) === id));
-  }
+  }, [dispatch]);
 
   const openPokemon = (id: number) => {
-    if(savedPokemons.find(pokemon => parseInt(pokemon.id) === id)) {
-      setActivePokemonById(id);
-    } else {
-      savePokemonData(id, null, null);
-    }
-    setDetailsPanel(true);
+    dispatch(fetchAndAddPokemon(id));
+    dispatch(setDetailsPanel(true));
   }
 
-  const updatePokemonData = (id: number, timestamp: number | null, notes: string | null) => {
-    const updatedPokemons = [...savedPokemons];
-    updatedPokemons[id] = { ...savedPokemons[id], added_at: timestamp, notes: notes};
-    setSavedPokemons(updatedPokemons);
+  const updatePokemonData = async (id: number, timestamp: number | null, notes: string | null) => {
+    if (!savedPokemons.some(pokemon => pokemon.id === id)) {
+      await dispatch(fetchAndAddPokemon(id));
+      // Get the updated savedPokemons after fetching
+      const updatedSavedPokemons = (await localforage.getItem('savedPokemons')) as any[];
+      updatedSavedPokemons ?? dispatch(setSavedPokemons(updatedSavedPokemons));
+    }
+    
+    // Use the latest savedPokemons from the store
+    const latestSavedPokemons = (store.getState() as RootState).savedPokemons;
+    
+    const updatedPokemons = latestSavedPokemons.map(pokemon => 
+      pokemon.id === id ? { ...pokemon, added_at: timestamp, notes: notes } : pokemon
+    );
+    dispatch(setSavedPokemons(updatedPokemons));
     localforage.setItem('savedPokemons', updatedPokemons);
   }
 
-  const savedPokemonIndex = (id: number) => {
-    return savedPokemons.findIndex(pokemon => parseInt(pokemon.id) === id);
-  }
-
   const catchPokemon = (id: number) => {
-    const localIndex = savedPokemonIndex(id);
-    if(localIndex !== -1) {
-      const pokemonData = savedPokemons.find(pokemon => parseInt(pokemon.id) === id);
-      updatePokemonData(localIndex, Date.now(), pokemonData.notes);
-    } else {
-      savePokemonData(id, Date.now(), null);
-    }
-    setActivePokemonById(id);
+    updatePokemonData(id, Date.now(), null);
+    dispatch(setActivePokemon(savedPokemons.find(pokemon => pokemon.id === id)));
   }
 
   const uncatchPokemon = (id: number) => {
-    const localIndex = savedPokemonIndex(id);
-    if(localIndex !== -1) {
-      const pokemonData = savedPokemons.find(pokemon => parseInt(pokemon.id) === id);
-      updatePokemonData(localIndex, null, pokemonData.notes);
-    }
-    setActivePokemon(undefined);
-  }
-
-  const updatePokemonNotes = (id: number, timestamp: number | null, notes: string | null) => {
-    updatePokemonData(savedPokemonIndex(id), timestamp, notes);
-  }
-
-  const resetPokedex = () => {
-    if (window.confirm('Do you want to reset your Pokédex? This action is nor reversible.') === true) {
-      setSavedPokemons([]);
-      setActivePokemon(undefined);
-      localforage.setItem('savedPokemons', []);
-    }
+    updatePokemonData(id, null, null);
+    dispatch(setActivePokemon(undefined));
   }
 
   const toggleStatusPanel = () => {
-    setStatusPanel(!statusPanel)
-  }
-
-  const closeDetailsPanel = () => {
-    setDetailsPanel(false);
-    setActivePokemon(undefined);
+    dispatch(setStatusPanel(!statusPanel));
   }
 
   return (
@@ -138,28 +82,9 @@ function App() {
           {statusPanel ? '❮ Pokemons' : 'Progress ❯'}
         </Button>
       </div>
-      <PokedexStats
-        totalPokemons={pokemonSpecies.length}
-        savedPokemons={savedPokemons}
-        resetPokedex={resetPokedex}
-        showStatsMobile={statusPanel}
-      />
-      <PokemonTable
-        key={pokemonSpecies.length}
-        species={pokemonSpecies}
-        savedPokemons={savedPokemons}
-        activePokemonId={activePokemon?.id || null}
-        openPokemon={openPokemon}
-        catchPokemon={catchPokemon}
-        uncatchPokemon={uncatchPokemon}
-        showTableMobile={!statusPanel}
-      />
-      <PokemonDetails
-        pokemon={activePokemon}
-        updatePokemonNotes={updatePokemonNotes}
-        showDetailsMobile={detailsPanel}
-        closeDetailsMobile={() => closeDetailsPanel()}
-      />
+      <PokedexStats />
+      <PokemonTable key={pokemonSpecies.length} openPokemon={openPokemon} catchPokemon={catchPokemon} uncatchPokemon={uncatchPokemon} />
+      <PokemonDetails />
     </div>
   );
 }

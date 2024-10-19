@@ -1,65 +1,59 @@
+import { useSelector, useDispatch } from 'react-redux';
 import './../assets/styles/pokemon-details.css';
 import debounce from './../utils/debounce';
 import pokeballBg from './../assets/images/pokeball-bg.svg';
 import Button from './../components/Button';
+import { RootState, AppDispatch } from './../redux/store';
+import { setDetailsPanel, setActivePokemon } from './../redux/uiSlice';
+import { updatePokemonNotes } from './../redux/savedPokemonsSlice';
 
-interface PokemonDetailsProps {
-  pokemon: {
-    name: string;
-    id: number;
-    height: number;
-    weight: number;
-    stats: any[];
-    types: any[];
-    image: string;
-    added_at: number | null;
-    notes: string | null;
-  } | undefined;
-  showDetailsMobile: boolean;
-  updatePokemonNotes: (id: number, timestamp: number | null, notes: string) => void;
-  closeDetailsMobile: () => void;
-}
+function PokemonDetails() {
+  const dispatch = useDispatch<AppDispatch>();
+  const { activePokemon, detailsPanel } = useSelector((state: RootState) => state.ui);
 
-function PokemonDetails({pokemon, showDetailsMobile, updatePokemonNotes, closeDetailsMobile}: PokemonDetailsProps) {
-
-  const debouncedUpdateNotes = debounce((id: number, added_at: number | null, notes: string) => {
-    updatePokemonNotes(id, added_at, notes);
+  const debouncedUpdateNotes = debounce((id: number, notes: string) => {
+    dispatch(updatePokemonNotes({ id, notes }));
   }, 1000);
 
   const updateNotes = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newNotes = (e.target as HTMLTextAreaElement).value
-    if(pokemon) {
-      debouncedUpdateNotes(pokemon.id, pokemon.added_at || null, newNotes);
+    const newNotes = (e.target as HTMLTextAreaElement).value;
+    if (activePokemon) {
+      debouncedUpdateNotes(activePokemon.id, newNotes);
     }
   }
 
+  const closeDetailsMobile = () => {
+    dispatch(setDetailsPanel(false));
+    dispatch(setActivePokemon(undefined));
+  }
+
   return (
-    <section className={`details-panel ${pokemon ? 'details-panel--active' : ''} ${showDetailsMobile ? 'details-panel--active-mobile' : ''}`}>
-      {pokemon ? (
+    <section className={`details-panel ${activePokemon ? 'details-panel--active' : ''} ${detailsPanel ? 'details-panel--active-mobile' : ''}`}>
+      {activePokemon ? (
         <>
           <div className='mb-16'>
             <Button size='sm' onClick={() => closeDetailsMobile()}>X Close</Button>
           </div>
           <div className='details-header'>
-            <img src={pokemon.image} alt={pokemon.name} className='details-header__img' />
+            <img src={activePokemon.image} alt={activePokemon.name} className='details-header__img' />
             <div className='details-header__info'>
               <p className='m-0 mb-8'>
-                <span className='ts-4 fw-700'>No.{pokemon.id}</span>&nbsp;
-                <span className='ts-3 text-uppercase'>{pokemon.name}</span>
+                <span className='ts-4 fw-700'>No.{activePokemon.id}</span>&nbsp;
+                <span className='ts-3 text-uppercase'>{activePokemon.name}</span>
               </p>
               <div className='flex mb-8'>
                 <p className='m-0 ts-4 mr-8'>
-                  <span className='fw-700'>{pokemon.height}</span>&nbsp;
+                  <span className='fw-700'>{activePokemon.height}</span>&nbsp;
                   <span>Height</span>
                 </p>
                 <p className='m-0 ts-4'>
-                  <span className='fw-700'>{pokemon.weight}</span>&nbsp;
+                  <span className='fw-700'>{activePokemon.weight}</span>&nbsp;
                   <span>Weight</span>
                 </p>
               </div>
               <div className='flex align-center'>
                 <span className='m-0 ts-4'>Types:</span>&nbsp;
-                {pokemon.types.map((type, index) => (
+                {activePokemon.types.map((type, index) => (
                   <span key={index} className='tag'>{type.type.name}</span>
                 ))}
               </div>
@@ -68,7 +62,7 @@ function PokemonDetails({pokemon, showDetailsMobile, updatePokemonNotes, closeDe
           <div className='details-stats'>
             <p className='m-0 mb-8 text-uppercase ts-4 fw-700'>Pokémon Stats</p>
             <div className='details-stats__grid'>
-              {pokemon.stats.map((stat, index) => (
+              {activePokemon.stats.map((stat, index) => (
                 <p className='m-0 mb-8 ts-4' key={index}>
                   <span className='ts-3 fw-800'>{stat.base_stat}</span>&nbsp;&nbsp;{stat.stat.name}
                 </p>
@@ -80,8 +74,8 @@ function PokemonDetails({pokemon, showDetailsMobile, updatePokemonNotes, closeDe
             <textarea
               className='details-notes__textarea'
               placeholder='Type some notes about this Pokémon'
-              key={pokemon ? pokemon.id : 'default'}
-              defaultValue={pokemon.notes || ''}
+              key={activePokemon ? activePokemon.id : 'default'}
+              defaultValue={activePokemon.notes || ''}
               onChange={(e) => updateNotes(e)}
             ></textarea>
           </div>
