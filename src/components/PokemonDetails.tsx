@@ -1,9 +1,10 @@
 import { useSelector, useDispatch } from 'react-redux';
+import localforage from 'localforage';
 import './../assets/styles/pokemon-details.css';
 import debounce from './../utils/debounce';
 import pokeballBg from './../assets/images/pokeball-bg.svg';
 import Button from './../components/Button';
-import { RootState, AppDispatch } from './../redux/store';
+import { store, RootState, AppDispatch } from './../redux/store';
 import { setDetailsPanel, setActivePokemon } from './../redux/uiSlice';
 import { updatePokemonNotes } from './../redux/savedPokemonsSlice';
 
@@ -13,6 +14,8 @@ function PokemonDetails() {
 
   const debouncedUpdateNotes = debounce((id: number, notes: string) => {
     dispatch(updatePokemonNotes({ id, notes }));
+    const updatedSavedPokemons = store.getState().savedPokemons;
+    localforage.setItem('savedPokemons', updatedSavedPokemons);
   }, 1000);
 
   const updateNotes = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
